@@ -76,7 +76,7 @@ def process_log_file(cur, filepath):
 
         # insert songplay record
         songplay_data = (
-        index, pd.to_datetime(row.ts, unit='ms'), row.userId, row.level, songid, artistid, row.sessionId, row.location,
+        pd.to_datetime(row.ts, unit='ms'), row.userId, row.level, songid, artistid, row.sessionId, row.location,
         row.userAgent)
         cur.execute(songplay_table_insert, songplay_data)
 
@@ -117,6 +117,11 @@ def main():
 
     process_data(cur, conn, filepath='data/song_data', func=process_song_file)
     process_data(cur, conn, filepath='data/log_data', func=process_log_file)
+
+    cur.execute("select * from songplays WHERE song_id is not null and artist_id is not null")
+    results = cur.fetchall()
+    print("Result of `select * from songplays WHERE song_id is not null and artist_id is not null`:")
+    print(results)
 
     print('Data loaded in tables successfully!')
     print('Now you can query the database.')
